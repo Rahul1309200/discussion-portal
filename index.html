@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discussion App</title>
+  <style>
+    /* Global Styling */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #f0f0f5; /* Light gray background */
+      color: #2c3e50; /* Dark muted blue-gray for text */
+    }
+
+    /* Navigation Bar Styling */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #2c3e50; /* Dark blue-gray */
+      padding: 10px 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav ul li {
+      display: inline-block;
+    }
+
+    nav ul li a {
+      color: #ecf0f1; /* Off-white */
+      text-decoration: none;
+      font-weight: bold;
+      padding: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    nav ul li a:hover {
+      background-color: #34495e; /* Slightly lighter blue-gray */
+      border-radius: 4px;
+    }
+
+    .profile-pic {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-image: url('https://via.placeholder.com/40');
+      background-size: cover;
+      background-position: center;
+      border: 2px solid #ecf0f1; /* Off-white */
+    }
+
+    /* Header Styling */
+    header {
+      background-color: #2980b9; /* Soft blue for a welcoming header */
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Container Layout */
+    .container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Left Pane */
+    .left-pane {
+      flex: 1;
+      background-color: #ecf0f1; /* Off-white background */
+      padding: 20px;
+      overflow-y: auto;
+      border-right: 1px solid #bdc3c7; /* Light gray border */
+    }
+
+    /* Right Pane */
+    .right-pane {
+      flex: 2;
+      padding: 20px;
+      background-color: #f7f9fb; /* Light gray-blue for content area */
+      color: #2c3e50;
+    }
+
+    /* Question Box Styling */
+    .question-box {
+      padding: 15px;
+      background-color: #ffffff; /* White for question boxes */
+      margin-bottom: 10px;
+      border: 1px solid #bdc3c7; /* Light gray border */
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .question-box:hover {
+      background-color: #e1ecf4; /* Light blue hover */
+    }
+
+    /* Forms */
+    .question-form,
+    .response-form {
+      margin-bottom: 20px;
+    }
+
+    /* Response Box */
+    .response-box {
+      background-color: #ecf0f1; /* Off-white for response boxes */
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #bdc3c7; /* Light gray border */
+      border-radius: 4px;
+    }
+
+    /* Form Input Fields */
+    form input[type="text"],
+    form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      background-color: #ffffff; /* White form inputs */
+      border: 1px solid #bdc3c7;
+      color: #2c3e50;
+      border-radius: 4px;
+    }
+
+    /* Emoji Picker */
+    .emoji-picker {
+      display: inline-block;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    /* Submit Buttons */
+    form button[type="submit"] {
+      padding: 10px 20px;
+      background-color: #27ae60; /* Soft green */
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    form button[type="submit"]:hover {
+      background-color: #2ecc71; /* Brighter green hover */
+    }
+
+    .resolve-btn {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #e74c3c; /* Soft red for resolve button */
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .resolve-btn:hover {
+      background-color: #c0392b; /* Darker red hover */
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navigation Bar -->
+  <nav>
+    <div class="logo">
+      <h2>Discussion Prompt</h2>
+    </div>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Categories</a></li>
+      <li><a href="#">My Questions</a></li>
+      <li><a href="#">Notifications</a></li>
+      <li><a href="#">Settings</a></li>
+    </ul>
+    <div class="profile-pic"></div>
+  </nav>
+
+  <!-- Header -->
+  <header>
+    Welcome to the Discussion Forum!
+  </header>
+
+  <div class="container">
+    <!-- Left Pane: List of Questions -->
+    <div class="left-pane" id="questionList">
+      <!-- Initially empty -->
+    </div>
+
+    <!-- Right Pane: Question Form / Question Details -->
+    <div class="right-pane" id="rightPane">
+      <div class="question-form">
+        <h3>Ask a Question</h3>
+        <form id="questionForm">
+          <label for="title">Title:</label><br>
+          <input type="text" id="title" required><br><br>
+          <label for="question">Question:</label><br>
+          <textarea id="question" required></textarea><br><br>
+          <button type="submit">Submit Question</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Arrays to store questions and responses
+    let questions = [];
+
+    // Function to render the list of questions in the left pane
+    function renderQuestionList() {
+      const questionList = document.getElementById('questionList');
+      questionList.innerHTML = ''; // Clear the list first
+      questions.forEach((q, index) => {
+        const questionBox = document.createElement('div');
+        questionBox.className = 'question-box';
+        questionBox.textContent = q.title;
+        questionBox.addEventListener('click', () => displayQuestion(index));
+        questionList.appendChild(questionBox);
+      });
+    }
+
+    // Function to display a question, response form, and previous responses
+    function displayQuestion(index) {
+      const rightPane = document.getElementById('rightPane');
+      const selectedQuestion = questions[index];
+
+      rightPane.innerHTML = `
+        <h3>${selectedQuestion.title} ${selectedQuestion.emoji || ''}</h3>
+        <p>${selectedQuestion.question}</p>
+        <div id="responses">
+          <h4>Responses:</h4>
+          ${selectedQuestion.responses.map(r => `<div class="response-box"><strong>${r.name}</strong>: ${r.comment} ${r.emoji || ''}</div>`).join('')}
+        </div>
+        <form id="responseForm" class="response-form">
+          <label for="name">Name:</label><br>
+          <input type="text" id="name" required><br><br>
+          <label for="comment">Comment:</label><br>
+          <textarea id="comment" required></textarea><br><br>
+          <div class="emoji-picker" id="responseEmojiPicker" style="display: inline-block;">
+            <select id="responseEmojiSelect">
+              <option value="">Select Emoji</option>
+              <option value="😀">😀</option>
+              <option value="😃">😃</option>
+              <option value="😄">😄</option>
+              <option value="😅">😅</option>
+              <option value="😂">😂</option>
+              <option value="😍">😍</option>
+              <option value="😢">😢</option>
+              <option value="😠">😠</option>
+            </select>
+          </div>
+          <button type="submit">Submit Response</button>
+        </form>
+        <button class="resolve-btn" onclick="resolveQuestion(${index})">Resolve Question</button>
+      `;
+
+      // Event listener for the response form submission
+      const responseForm = document.getElementById('responseForm');
+      responseForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const comment = document.getElementById('comment').value;
+        const emoji = document.getElementById('responseEmojiSelect').value;
+
+        // Add response to the selected question
+        selectedQuestion.responses.push({ name, comment, emoji });
+        // Render updated question display
+        displayQuestion(index);
+      });
+    }
+
+    // Function to resolve a question
+    function resolveQuestion(index) {
+      const selectedQuestion = questions[index];
+      selectedQuestion.emoji = '✅'; // Add a checkmark emoji
+      // Render updated question display
+      displayQuestion(index);
+    }
+
+    // Event listener for the question form submission
+    document.getElementById('questionForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+      const question = document.getElementById('question').value;
+
+      // Create a new question object and add it to the questions array
+      questions.push({
+        title,
+        question,
+        responses: [],
+        emoji: ''
+      });
+
+      // Render the updated list of questions
+      renderQuestionList();
+
+      // Clear the form inputs
+      document.getElementById('title').value = '';
+      document.getElementById('question').value = '';
+    });
+  </script>
+</body>
+
+</html>
